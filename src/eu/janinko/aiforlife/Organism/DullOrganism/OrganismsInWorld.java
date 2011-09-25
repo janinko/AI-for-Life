@@ -50,6 +50,7 @@ public class OrganismsInWorld{
 	
 	public void remove(Organism o){
 		Position pos = organisms.remove(o);
+		System.out.println("Removing organism " + o + " from " + pos);
 		removeOrganismFromPosmap(o,pos);
 	}
 	
@@ -58,12 +59,16 @@ public class OrganismsInWorld{
 	}
 	
 	public void move(Organism o, Position newPos){
+		System.out.println("Moving organism " + o + " from " + organisms.get(o) + " to " + newPos);
 		removeOrganismFromPosmap(o,organisms.get(o));
 		putOrganismIntoPosmap(o,newPos);
 		organisms.put(o, newPos);
 	}
 	
 	private void removeOrganismFromPosmap(Organism o, Position pos){
+		if(posmap.get(pos) == null){
+			throw new NullPointerException();
+		}
 		if(posmap.get(pos).size() <= 1){
 			posmap.remove(pos);
 		}else{
@@ -95,5 +100,29 @@ public class OrganismsInWorld{
 	
 	public Iterator<Entry<Organism, Position>> iterator(){
 		return organisms.entrySet().iterator();
+	}
+
+	public void addNear(Organism o, Position position) {
+		Position pos = position;
+		int i = 0;
+		int p = 0;
+		int c = 1;
+		while(posmap.containsKey(pos)){
+			if(p<c){
+				pos.moveForward(1);
+				p++;
+			}else{
+				pos.rotate(1);
+				pos.moveForward(1);
+				p = 1;
+				i++;
+			}
+			if(i >= 2){
+				c++;
+				i = 0;
+			}
+		}
+		this.organisms.put(o, pos);
+		this.putOrganismIntoPosmap(o, pos);
 	}
 }

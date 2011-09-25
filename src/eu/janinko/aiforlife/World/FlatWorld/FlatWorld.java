@@ -62,7 +62,7 @@ public class FlatWorld implements World, WorldStatistics, MovableWorld, Sensable
 			while(organisms.contains(pos)){
 				pos = new Position(sizeX, sizeY);
 			}
-			System.out.println(" Position: " + pos);
+			System.out.println(newOrganism + " Position: " + pos);
 			organisms.add(newOrganism, pos);
 		}
 	}
@@ -148,12 +148,7 @@ public class FlatWorld implements World, WorldStatistics, MovableWorld, Sensable
 				if(orgs.size() > 1){
 					solved = false;
 					colidedOrganisms.addAll(orgs);
-					Organism[] orgsa = orgs.toArray(new Organism[orgs.size()]);
-					for(int i = 0; i<orgsa.length; i++){
-						for(int j = i+1; j < orgsa.length; j++){
-							this.onCollision(orgsa[i], orgsa[j]);
-						}
-					}
+					this.onCollision(orgs);
 				}
 			}
 			for(Organism o : colidedOrganisms){
@@ -174,41 +169,14 @@ public class FlatWorld implements World, WorldStatistics, MovableWorld, Sensable
 	}
 
 	@Override
-	public void onCollision(Organism o1, Organism o2) {
+	public void onCollision(Set<Organism> organisms) {
 		colision++;
-		boolean o1wb = o1.wantBreed();
-		boolean o2wb = o2.wantBreed();
-		if(!o1wb){
-			o2.damage(10);
-			damaged++;
-			try {
-				breedManager.maybeMutate(o2);
-			} catch (UnsupportedOrganismException e) {
-				e.printStackTrace();
-			}
-		}
-		if(!o2wb){
-			o1.damage(10);
-			damaged++;
-			try {
-				breedManager.maybeMutate(o1);
-			} catch (UnsupportedOrganismException e) {
-				e.printStackTrace();
-			}
-		}
-		if(o1wb && o2wb){
-			//System.out.println("Organismy " + o1 + " a " + o2 + " se chteji parit.");
-			Organism[] parents = new Organism[2];
-			parents[0] = o1;
-			parents[1] = o2;
-			try {
-				Organism child = breedManager.breed(parents);
-				newborns.add(child);
-			} catch (UnsupportedOrganismException e) {
-				e.printStackTrace();
-			}
-		}
 		
+		for(Organism o : organisms){
+			HashSet<Organism> orgs = new HashSet<Organism>(organisms);
+			orgs.remove(o);
+			o.onCollision(orgs);
+		}
 	}
 
 	@Override
@@ -355,6 +323,22 @@ public class FlatWorld implements World, WorldStatistics, MovableWorld, Sensable
 	@Override
 	public WorldObject[] senseNear(Organism o) throws UnsupportedSenseException {
 		throw new UnsupportedSenseException();
+	}
+
+	@Override
+	public BreedManager getBreedManager() {
+		return this.breedManager;
+	}
+
+	@Override
+	public void breed(Organism[] wb) {
+		try {
+			Organism o = this.breedManager.breed(wb);
+			organismsInNextState.addNear(o,organismsInNextState.getPosition(wb[0]));
+		} catch (UnsupportedOrganismException e) {
+			e.printStackTrace();
+		}
+		
 	}
 }
 

@@ -51,7 +51,7 @@ public class DrawableFlatWorld extends FlatWorld implements DrawableWorld {
 		Position pos = this.getOrganismPosition(o);
 		
 		generator.setSeed(o.hashCode());
-		g.setColor(new Color(generator.nextInt(156)+80, generator.nextInt(156)+80, generator.nextInt(156)+80));
+		g.setColor(new Color(generator.nextInt(176)+80, generator.nextInt(176)+80, generator.nextInt(176)+80));
 		g.fillOval((int)(pos.getPosX() * gridsize + space + 2), (int)(pos.getPosY()*gridsize + space + 2), gridsize - 4, gridsize - 4);
 		g.setColor(Color.BLACK);
 		int x = pos.getPosX() * gridsize + space;

@@ -1,6 +1,7 @@
 package eu.janinko.aiforlife.World;
 
 import java.util.Collection;
+import java.util.Set;
 
 import eu.janinko.aiforlife.BreedManager.BreedManager;
 import eu.janinko.aiforlife.Organism.Organism;
@@ -15,15 +16,19 @@ public interface World {
 	Collection<Organism> getOrganisms();
 	
 	void generate();
-	
+
+	OrganismManager getOrganismManager();
 	void setOrganismManager(OrganismManager om);
+	BreedManager getBreedManager();
 	void setBreedManager(BreedManager bm);
 	
 	void nextTick();
 	
 	void onDie(Organism o);
 
-	void onCollision(Organism o1, Organism o2);
+	void onCollision(Set<Organism> organisms);
 
-	OrganismManager getOrganismManager();
+	void breed(Organism[] wb);
+
+
 }

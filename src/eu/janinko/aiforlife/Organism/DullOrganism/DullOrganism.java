@@ -3,7 +3,9 @@ package eu.janinko.aiforlife.Organism.DullOrganism;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Random;
+import java.util.Set;
 
+import eu.janinko.aiforlife.BreedManager.UnsupportedOrganismException;
 import eu.janinko.aiforlife.Effector.Effector;
 import eu.janinko.aiforlife.Organism.Organism;
 import eu.janinko.aiforlife.Sensor.Sensor;
@@ -55,6 +57,15 @@ public class DullOrganism implements Organism {
 	}
 
 	@Override
+	public void onDamage(int damage) {
+		try {
+			this.world.getBreedManager().maybeMutate(this, (hits / damage));
+		} catch (UnsupportedOrganismException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
 	public void die() {
 		this.alive = false;
 		this.hits = 0;
@@ -76,6 +87,9 @@ public class DullOrganism implements Organism {
 		if(nextHits <= 0){
 			this.die();
 			return;
+		}
+		if(this.hits > this.nextHits){
+			this.onDamage(hits - nextHits);
 		}
 		this.hits = this.nextHits;
 	}
@@ -163,6 +177,24 @@ public class DullOrganism implements Organism {
 		if (name != other.name)
 			return false;
 		return true;
+	}
+
+	@Override
+	public void onCollision(Set<Organism> organisms) {
+		if(this.wantBreed()){
+			for(Organism o: organisms){
+				if(o.wantBreed()){
+					Organism[] wb = new Organism[2];
+					wb[0] = this;
+					wb[1] = o;
+					this.world.breed(wb);
+				}
+			}
+		}else{
+			for(Organism o: organisms){
+				o.damage(10);
+			}
+		}
 	}
 
 

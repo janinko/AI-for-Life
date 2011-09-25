@@ -1,6 +1,7 @@
 package eu.janinko.aiforlife.Organism;
 
 import java.util.Collection;
+import java.util.Set;
 
 import eu.janinko.aiforlife.Effector.Effector;
 import eu.janinko.aiforlife.Sensor.Sensor;
@@ -26,5 +27,9 @@ public interface Organism {
 	void gotoNextState();
 
 	boolean wantBreed();
+	
+	void onCollision(Set<Organism> organisms);
+	
+	void onDamage(int damage);
 
 }
