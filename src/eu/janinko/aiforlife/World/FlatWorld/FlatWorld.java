@@ -10,7 +10,6 @@ import eu.janinko.aiforlife.BreedManager.UnsupportedOrganismException;
 import eu.janinko.aiforlife.Organism.Organism;
 import eu.janinko.aiforlife.Organism.OrganismManager;
 import eu.janinko.aiforlife.Organism.DullOrganism.DullOrganism;
-import eu.janinko.aiforlife.Organism.DullOrganism.OrganismsInWorld;
 import eu.janinko.aiforlife.World.MovableWorld;
 import eu.janinko.aiforlife.World.OrganismWorldObject;
 import eu.janinko.aiforlife.World.SensableWorld;
