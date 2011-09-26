@@ -22,7 +22,6 @@ public class NextButton extends JButton implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		System.out.println("Clicked Next.");
 		world.nextTick();
 		window.worldUpdated();
 	}

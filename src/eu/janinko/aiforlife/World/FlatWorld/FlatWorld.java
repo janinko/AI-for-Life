@@ -2,8 +2,10 @@ package eu.janinko.aiforlife.World.FlatWorld;
 
 import java.util.Collection;
 import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.Map.Entry;
 
 import eu.janinko.aiforlife.BreedManager.BreedManager;
 import eu.janinko.aiforlife.BreedManager.UnsupportedOrganismException;
@@ -24,7 +26,7 @@ public class FlatWorld implements World, WorldStatistics, MovableWorld, Sensable
 	OrganismsInWorld organisms;
 	OrganismsInWorld organismsInNextState;
 	
-	HashSet<Organism> newborns;
+	HashMap<Organism, Position> newborns;
 	
 	int sizeX;
 	int sizeY;
@@ -43,7 +45,7 @@ public class FlatWorld implements World, WorldStatistics, MovableWorld, Sensable
 		this.sizeY = sizeY;
 		organisms = new OrganismsInWorld();
 		organismsInNextState = null;
-		newborns = new HashSet<Organism>();
+		newborns = new HashMap<Organism, Position>();
 	}
 
 	@Override
@@ -61,7 +63,6 @@ public class FlatWorld implements World, WorldStatistics, MovableWorld, Sensable
 			while(organisms.contains(pos)){
 				pos = new Position(sizeX, sizeY);
 			}
-			System.out.println(newOrganism + " Position: " + pos);
 			organisms.add(newOrganism, pos);
 		}
 	}
@@ -116,22 +117,15 @@ public class FlatWorld implements World, WorldStatistics, MovableWorld, Sensable
 			}
 		}
 		
-		for(Organism o : newborns){
-			if(organisms.getOrganisms().size() >= (sizeX * sizeY)){
-				System.out.println("Population boom!");
+		int bornable = sizeX * sizeY - organisms.getOrganisms().size();
+		for(Entry<Organism, Position> e : newborns.entrySet()){
+			if( born >= bornable){
 				break;
 			}
-			Position pos = new Position(sizeX, sizeY);
-			while(organisms.contains(pos)){
-				pos = new Position(sizeX, sizeY);
-			}
-			//System.out.println( "Organism "+ o + " born at position " + pos);
-			organisms.add(o, pos);
+			organisms.addNear(e.getKey(), e.getValue());
 			born++;
 		}
-
-		System.out.println( "Colisions:  " + colision);
-		System.out.println( "Born " + born + " of " + newborns.size() + " babies");
+		
 		newborns.clear();
 	}
 
@@ -260,7 +254,7 @@ public class FlatWorld implements World, WorldStatistics, MovableWorld, Sensable
 			m = 1;
 		}
 
-		Position newpos = new Position(organismsInNextState.getPosition(o));
+		Position newpos = organismsInNextState.getPosition(o);
 		newpos.moveForward(m);
 
 		this.organismsInNextState.move(o, newpos);
@@ -284,7 +278,7 @@ public class FlatWorld implements World, WorldStatistics, MovableWorld, Sensable
 			movey = -1;
 		}
 
-		Position newpos = new Position(organismsInNextState.getPosition(o));
+		Position newpos = organismsInNextState.getPosition(o);
 		newpos.move(movex, movey);
 
 		this.organismsInNextState.move(o, newpos);
@@ -297,7 +291,11 @@ public class FlatWorld implements World, WorldStatistics, MovableWorld, Sensable
 		if(x > 0){
 			r = 1;
 		}
-		organismsInNextState.getPosition(o).rotate(r);
+		
+		Position newpos = organismsInNextState.getPosition(o);
+		newpos.rotate(r);
+
+		this.organismsInNextState.move(o, newpos);
 	}
 
 	@Override
@@ -307,7 +305,7 @@ public class FlatWorld implements World, WorldStatistics, MovableWorld, Sensable
 
 	@Override
 	public WorldObject senseAhead(Organism o) throws UnsupportedSenseException {
-		Position pos = new Position(organisms.getPosition(o));
+		Position pos = organisms.getPosition(o);
 		pos.moveForward(1);
 		HashSet<Organism> orgs = organisms.getOrganisms(pos);
 		if(orgs.isEmpty()) return null;
@@ -333,7 +331,7 @@ public class FlatWorld implements World, WorldStatistics, MovableWorld, Sensable
 	public void breed(Organism[] wb) {
 		try {
 			Organism o = this.breedManager.breed(wb);
-			organismsInNextState.addNear(o,organismsInNextState.getPosition(wb[0]));
+			newborns.put(o,organismsInNextState.getPosition(wb[0]));
 		} catch (UnsupportedOrganismException e) {
 			e.printStackTrace();
 		}

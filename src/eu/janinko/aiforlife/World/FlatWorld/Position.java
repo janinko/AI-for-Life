@@ -78,15 +78,27 @@ public class Position{
 	}
 
 	public void setPosX(int d) {
-		this.x = d;
+		this.x = d % sizeX;
+
+		if(this.x < 0){
+			this.x += sizeX;
+		}
 	}
 
 	public void setPosY(int d) {
-		this.y = d;
+		this.y = d % sizeY;
+
+		if(this.y < 0){
+			this.y += sizeY;
+		}
 	}
 
 	public void setRotX(int d) {
-		this.r = d;
+		this.r = d % 4;
+
+		if(this.r < 0){
+			this.r += 4;
+		}
 	}
 	
 	public int getSizeX() {
