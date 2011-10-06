@@ -1,14 +1,10 @@
 package eu.janinko.aiforlife.Organism.DullOrganism;
 
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
 import eu.janinko.aiforlife.BreedManager.UnsupportedOrganismException;
-import eu.janinko.aiforlife.Effector.Effector;
 import eu.janinko.aiforlife.Organism.Organism;
-import eu.janinko.aiforlife.Sensor.Sensor;
 import eu.janinko.aiforlife.World.MovableWorld;
 import eu.janinko.aiforlife.World.SensableWorld;
 import eu.janinko.aiforlife.World.World;
@@ -31,7 +27,9 @@ public class DullOrganism implements Organism {
 	int name;
 	Random generator;
 	
-	
+	private int r;
+	private int g;
+	private int b;
 	
 
 	DullOrganism(World world, int hits) {
@@ -49,6 +47,10 @@ public class DullOrganism implements Organism {
 
 		generator = new Random();
 		this.name = generator.nextInt(10000);
+
+		r = generator.nextInt(176)+80;
+		g = generator.nextInt(176)+80;
+		b = generator.nextInt(176)+80;
 	}
 
 	@Override
@@ -70,16 +72,6 @@ public class DullOrganism implements Organism {
 		this.alive = false;
 		this.hits = 0;
 		world.onDie(this);
-	}
-
-	@Override
-	public Collection<Effector> getEffectors() {
-		return null;
-	}
-
-	@Override
-	public Collection<Sensor> getSensors() {
-		return new HashSet<Sensor>();
 	}
 
 	@Override
@@ -152,7 +144,6 @@ public class DullOrganism implements Organism {
 		return this.name + ":" + this.hits;
 	}
 
-	@Override
 	public boolean wantBreed() {
 		return generator.nextDouble() > this.dna.getBreedery();
 	}
@@ -192,9 +183,17 @@ public class DullOrganism implements Organism {
 			}
 		}else{
 			for(Organism o: organisms){
-				o.damage(10);
+				o.damage(15);
 			}
 		}
+	}
+
+	@Override
+	public int color(int color) {
+		if(color == 0) return r;
+		if(color == 1) return g;
+		if(color == 2) return b;
+		return 0;
 	}
 
 

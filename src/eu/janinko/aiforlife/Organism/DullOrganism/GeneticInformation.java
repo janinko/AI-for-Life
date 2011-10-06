@@ -8,7 +8,7 @@ public class GeneticInformation {
 	private int genlen;
 	private double[] dna;
 
-	Random generator = new Random();
+	private Random generator = new Random();
 	
 	public GeneticInformation(int genlen, int length){
 		
@@ -20,7 +20,7 @@ public class GeneticInformation {
 		
 		dna = new double[length*genlen];
 		
-		breedery = generator.nextFloat() / 4 + 0.375;
+		breedery = generator.nextDouble() / 4 + 0.475;
 		
 		for(int i = 0; i < length; i++){
 			for(int j = 0; j < genlen; j++){
@@ -31,6 +31,19 @@ public class GeneticInformation {
 	
 	public GeneticInformation(int genlen){
 		this(genlen, -1);
+	}
+
+	public GeneticInformation(GeneticInformation dna2) {
+		this.breedery = dna2.getBreedery();
+		this.genlen = dna2.getGenLen();
+
+		int length = dna2.getLength();
+		this.dna = new double[length * genlen];
+		for(int i = 0; i < length; i++ ){
+			for(int j = 0; j < genlen; j++){
+				this.dna[i*genlen+j] = dna2.getGenInfo(i, j);
+			}
+		}
 	}
 
 	public double getBreedery() {

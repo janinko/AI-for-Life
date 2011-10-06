@@ -4,7 +4,6 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.util.Random;
 
 import eu.janinko.aiforlife.Organism.Organism;
 import eu.janinko.aiforlife.World.DrawableWorld;
@@ -13,8 +12,6 @@ public class DrawableFlatWorld extends FlatWorld implements DrawableWorld {
 	
 	private int gridsize = 20;
 	private int space = 6;
-
-	private Random generator = new Random();
 	
 	public DrawableFlatWorld() {
 	}
@@ -50,8 +47,7 @@ public class DrawableFlatWorld extends FlatWorld implements DrawableWorld {
 	private void paintOrganism(Graphics2D g, Organism o){
 		Position pos = this.getOrganismPosition(o);
 		
-		generator.setSeed(o.hashCode());
-		g.setColor(new Color(generator.nextInt(176)+80, generator.nextInt(176)+80, generator.nextInt(176)+80));
+		g.setColor(new Color(o.color(0), o.color(1), o.color(2)));
 		g.fillOval((int)(pos.getPosX() * gridsize + space + 2), (int)(pos.getPosY()*gridsize + space + 2), gridsize - 4, gridsize - 4);
 		g.setColor(Color.BLACK);
 		int x = pos.getPosX() * gridsize + space;

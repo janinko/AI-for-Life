@@ -12,6 +12,9 @@ import eu.janinko.aiforlife.BreedManager.UnsupportedOrganismException;
 import eu.janinko.aiforlife.Organism.Organism;
 import eu.janinko.aiforlife.Organism.OrganismManager;
 import eu.janinko.aiforlife.Organism.DullOrganism.DullOrganism;
+import eu.janinko.aiforlife.Organism.DullOrganism.GeneticInformation;
+import eu.janinko.aiforlife.Organism.PredatorAndPray.Pray;
+import eu.janinko.aiforlife.Organism.PredatorAndPray.Predator;
 import eu.janinko.aiforlife.World.MovableWorld;
 import eu.janinko.aiforlife.World.OrganismWorldObject;
 import eu.janinko.aiforlife.World.SensableWorld;
@@ -101,6 +104,11 @@ public class FlatWorld implements World, WorldStatistics, MovableWorld, Sensable
 		this.organismsInNextState = new OrganismsInWorld(organisms);
 		for(Organism o : organisms.getOrganisms()){
 			o.prepareNextState();
+			try {
+				this.breedManager.maybeMutate(o);
+			} catch (UnsupportedOrganismException e1) {
+				e1.printStackTrace();
+			}
 		}
 		
 		handleColisions();
@@ -117,7 +125,7 @@ public class FlatWorld implements World, WorldStatistics, MovableWorld, Sensable
 			}
 		}
 		
-		int bornable = sizeX * sizeY - organisms.getOrganisms().size();
+		int bornable = (int) ((sizeX * sizeY * 1) - organisms.getOrganisms().size());
 		for(Entry<Organism, Position> e : newborns.entrySet()){
 			if( born >= bornable){
 				break;
@@ -145,6 +153,7 @@ public class FlatWorld implements World, WorldStatistics, MovableWorld, Sensable
 				}
 			}
 			for(Organism o : colidedOrganisms){
+				if(!o.isAlive()) continue;
 				Position pos = organisms.getPosition(o);
 				if(pos == null){
 					pos = new Position(sizeX,sizeY);
@@ -158,6 +167,7 @@ public class FlatWorld implements World, WorldStatistics, MovableWorld, Sensable
 	public void onDie(Organism o) {
 		//System.out.println("Organism " + o + " died at " + organisms.getPosition(o));
 		organisms.remove(o);
+		organismsInNextState.remove(o);
 		died++;
 	}
 
@@ -210,24 +220,51 @@ public class FlatWorld implements World, WorldStatistics, MovableWorld, Sensable
 		if(propertyname.equals("minbreed")){
 			d = 1;
 			for(Organism o : organisms.getOrganisms()){
-				DullOrganism dull = (DullOrganism) o;
-				if(dull.getGeneticCode().getBreedery() < d){
-					d = dull.getGeneticCode().getBreedery();
+				GeneticInformation gi = null;
+				if(o instanceof DullOrganism){
+					gi = ((DullOrganism)o).getGeneticCode();
+				}
+				if(o instanceof Pray){
+					gi = ((Pray)o).getDNA();
+				}
+				if(o instanceof Predator){
+					gi = ((Predator)o).getDNA();
+				}
+				if(gi.getBreedery() < d){
+					d = gi.getBreedery();
 				}
 			}
 		}else if(propertyname.equals("avgbreed")){
 			d = 0;
 			for(Organism o : organisms.getOrganisms()){
-				DullOrganism dull = (DullOrganism) o;
-				d += dull.getGeneticCode().getBreedery();
+				GeneticInformation gi = null;
+				if(o instanceof DullOrganism){
+					gi = ((DullOrganism)o).getGeneticCode();
+				}
+				if(o instanceof Pray){
+					gi = ((Pray)o).getDNA();
+				}
+				if(o instanceof Predator){
+					gi = ((Predator)o).getDNA();
+				}
+				d += gi.getBreedery();
 			}
 			d /= organisms.getOrganisms().size();
 		}else if(propertyname.equals("maxbreed")){
 			d = 0;
 			for(Organism o : organisms.getOrganisms()){
-				DullOrganism dull = (DullOrganism) o;
-				if(dull.getGeneticCode().getBreedery() > d){
-					d = dull.getGeneticCode().getBreedery();
+				GeneticInformation gi = null;
+				if(o instanceof DullOrganism){
+					gi = ((DullOrganism)o).getGeneticCode();
+				}
+				if(o instanceof Pray){
+					gi = ((Pray)o).getDNA();
+				}
+				if(o instanceof Predator){
+					gi = ((Predator)o).getDNA();
+				}
+				if(gi.getBreedery() > d){
+					d = gi.getBreedery();
 				}
 			}
 		}else{
@@ -288,8 +325,11 @@ public class FlatWorld implements World, WorldStatistics, MovableWorld, Sensable
 	public void rotate(Organism o, double x, double y, double z)
 			throws UnsupportedMoveException {
 		int r = 0;
-		if(x > 0){
+		if(x > 1){
 			r = 1;
+		}
+		if(x < -1){
+			r = -1;
 		}
 		
 		Position newpos = organismsInNextState.getPosition(o);

@@ -1,10 +1,6 @@
 package eu.janinko.aiforlife.Organism;
 
-import java.util.Collection;
 import java.util.Set;
-
-import eu.janinko.aiforlife.Effector.Effector;
-import eu.janinko.aiforlife.Sensor.Sensor;
 
 public interface Organism {
 	
@@ -16,9 +12,9 @@ public interface Organism {
 	 */
 	boolean isAlive();
 	
-	Collection<Sensor> getSensors();
+	//Collection<Sensor> getSensors();
 	
-	Collection<Effector> getEffectors();
+	//Collection<Effector> getEffectors();
 
 	void prepareNextState();
 
@@ -31,5 +27,7 @@ public interface Organism {
 	void onCollision(Set<Organism> organisms);
 	
 	void onDamage(int damage);
+	
+	int color(int color);
 
 }
