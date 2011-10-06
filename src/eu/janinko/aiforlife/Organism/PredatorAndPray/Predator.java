@@ -26,6 +26,11 @@ public class Predator implements Organism {
 	private int r;
 	private int g;
 	private int b;
+	
+	private static final int dieThreeshold = -100;
+	private static final int duplicateThreeshold = 200;
+	private static final int damage = 10;
+	private static final int scoreGain = 20;
 
 	Random generator = new Random();
 	
@@ -53,7 +58,7 @@ public class Predator implements Organism {
 	@Override
 	public void damage(int damage) {
 		this.score -= damage;
-		if(score <= -100){
+		if(score <= dieThreeshold){
 			die();
 		}else{
 			onDamage(damage);
@@ -80,13 +85,14 @@ public class Predator implements Organism {
 		for(Organism o : organisms){
 			if(!o.isAlive()) continue;
 			
-			o.damage(10);
+			o.damage(damage);
 			if(o instanceof Pray){
-				score+=20;
-				if(score > 200){
+				score+=scoreGain;
+				if(score > duplicateThreeshold){
 					Organism[] wb = new Organism[1];
 					wb[0] = this;
 					this.world.breed(wb);
+					score -= duplicateThreeshold;
 				}
 			}
 		}
