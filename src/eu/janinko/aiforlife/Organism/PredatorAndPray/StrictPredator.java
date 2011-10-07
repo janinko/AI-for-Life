@@ -29,6 +29,7 @@ public class StrictPredator extends Predator {
 		if(statepointer + 1 >= this.dna.getLength()){
 			statepointer = 0;
 		}
+		nextScore = score;
 
 		SensableWorld w = (SensableWorld) world;
 		MovableWorld mw = (MovableWorld) world;

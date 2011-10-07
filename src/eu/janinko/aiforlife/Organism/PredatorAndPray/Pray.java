@@ -16,6 +16,8 @@ import eu.janinko.aiforlife.World.SensableWorld.UnsupportedSenseException;
 
 public class Pray implements Organism {
 	private boolean alive;
+	private boolean willDie;
+	private int age;
 	
 	protected GeneticInformation dna;
 	protected int statepointer;
@@ -25,6 +27,8 @@ public class Pray implements Organism {
 	private int r;
 	private int g;
 	private int b;
+	
+	private static final int durability = 100;
 	
 	Random generator = new Random();
 	
@@ -38,10 +42,12 @@ public class Pray implements Organism {
 			throw new InvalidParameterException("The world mus be MovableWorld");
 		
 		alive = true;
+		willDie = false;
 		statepointer = 0;
 		this.world = world;
 
 		dna = geneticCode;
+		age = 0;
 		
 		r = generator.nextInt(80);
 		g = generator.nextInt(30)+226;
@@ -50,7 +56,7 @@ public class Pray implements Organism {
 
 	@Override
 	public void damage(int damage) {
-		die();
+		willDie = true;
 	}
 
 	@Override
@@ -61,6 +67,11 @@ public class Pray implements Organism {
 
 	@Override
 	public void gotoNextState() {
+		age++;
+		if(willDie || age > durability){
+			this.die();
+			return;
+		}
 	}
 
 	@Override
@@ -71,9 +82,9 @@ public class Pray implements Organism {
 	@Override
 	public void onCollision(Set<Organism> organisms) {
 		for(Organism o : organisms){
+			if(!o.isAlive()) continue;
+			
 			if(o instanceof Pray){
-				if(!o.isAlive()) continue;
-				
 				Pray pray = (Pray) o;
 				
 				if(pray.wantBreed() && this.wantBreed()){
@@ -88,11 +99,10 @@ public class Pray implements Organism {
 
 	@Override
 	public void onDamage(int damage) {
-		die();
 	}
 
 	@Override
-	public void prepareNextState() {
+	public void prepareNextState() {		
 		if(statepointer + 1 >= this.dna.getLength()){
 			statepointer = 0;
 		}
@@ -100,7 +110,6 @@ public class Pray implements Organism {
 		if(isMoving()){
 			this.move();
 		}
-
 	}
 	
 	private boolean isMoving(){
@@ -160,16 +169,23 @@ public class Pray implements Organism {
 		return this.dna;
 	}
 
+	private int hashcode=-1;
 	@Override
 	public int hashCode() {
+		if(hashcode == -1){
+			genHashCode();
+		}
+		return hashcode;
+	}
+	
+	private void genHashCode(){
 		final int prime = 31;
-		int result = 1;
-		result = prime * result + b;
-		result = prime * result + g;
-		result = prime * result
+		hashcode = 1;
+		hashcode = prime * hashcode + b;
+		hashcode = prime * hashcode + g;
+		hashcode = prime * hashcode
 				+ ((generator == null) ? 0 : generator.hashCode());
-		result = prime * result + r;
-		return result;
+		hashcode = prime * hashcode + r;
 	}
 
 	@Override
@@ -195,4 +211,8 @@ public class Pray implements Organism {
 		return true;
 	}
 
+	@Override
+	public String toString() {
+		return "Pray [age=" + age + ", hashCode()=" + hashCode() + "]";
+	}
 }

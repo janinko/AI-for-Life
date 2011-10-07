@@ -28,6 +28,8 @@ public class MainWindow extends JFrame implements ActionListener {
 	private int damaged = 0;
 	private int died = 0;
 	
+	private int time = 0;
+	
 	private String lsep = System.getProperty("line.separator");
 
 	public MainWindow(World w){
@@ -77,6 +79,7 @@ public class MainWindow extends JFrame implements ActionListener {
 	}
 
 	public void worldUpdated() {
+		time++;
 		paintedWorld.repaint();
 		if(world instanceof WorldStatistics){
 			WorldStatistics w = (WorldStatistics) world;
@@ -101,7 +104,8 @@ public class MainWindow extends JFrame implements ActionListener {
 					      "Overall:" + lsep + 
 						  " Born: " + born + lsep +
 					      " Damaged:  "+ damaged + lsep +
-					      " Died: " + died);
+					      " Died: " + died + lsep +
+					      "Time: " + time);
 		}
 	}
 

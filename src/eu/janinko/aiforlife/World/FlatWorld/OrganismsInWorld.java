@@ -1,5 +1,7 @@
 package eu.janinko.aiforlife.World.FlatWorld;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -9,106 +11,109 @@ import java.util.Map.Entry;
 import eu.janinko.aiforlife.Organism.Organism;
 
 public class OrganismsInWorld{
-	HashMap<Position, HashSet<Organism>> posmap;
-	HashMap<Organism, Position> organisms;
+	HashMap<Organism, ConstPosition> organisms;
+	HashMap<ConstPosition, HashSet<Organism>> posmap;
 	
 	public OrganismsInWorld(){
-		posmap = new HashMap<Position, HashSet<Organism>>();
-		organisms = new HashMap<Organism, Position>();
-	}
-
-	public boolean contains(Position pos) {
-		return posmap.containsKey(pos);
-	}
-	
-	public boolean contains(Organism o) {
-		return organisms.containsKey(o);
+		organisms = new HashMap<Organism, ConstPosition>();
+		posmap = new HashMap<ConstPosition, HashSet<Organism>>();
 	}
 
 	public OrganismsInWorld(OrganismsInWorld oiw) {
-		posmap = new HashMap<Position, HashSet<Organism>>();
-		organisms = new HashMap<Organism, Position>();
-		
-		Iterator<Entry<Organism, Position>> it = oiw.iterator();
-		while(it.hasNext()){
-			Entry<Organism, Position> e = it.next();
-			this.add(e.getKey(), e.getValue());
-		}
+		organisms = new HashMap<Organism, ConstPosition>(oiw.organisms);
+		posmap = new HashMap<ConstPosition, HashSet<Organism>>(oiw.posmap);
 	}
-
-	public void clear() {
-		posmap.clear();
-		organisms.clear();
-	}
-
-	public void add(Organism o, Position pos){
+	
+	/** Add organism into OrganismInWorld, if OrganismInWorld doesn't contains it yet.
+	 * 
+	 * @param o Organism to which will be added
+	 * @param p Position to where organism will be added
+	 */
+	public void add(Organism o, Position p){
+		if(o == null || p == null) throw new NullPointerException();
 		if(organisms.containsKey(o)) return;
+		ConstPosition pos = new ConstPosition(p);
 		organisms.put(o, pos);
-		putOrganismIntoPosmap(o, pos);
+		addToPosmap(o,pos);
 	}
 	
 	public void remove(Organism o){
-		Position pos = organisms.remove(o);
-		removeOrganismFromPosmap(o,pos);
+		if(o == null) throw new NullPointerException();
+		if(!organisms.containsKey(o)) return;
+		
+		removeFromPosmap(o,organisms.remove(o));
 	}
 	
-	public Position getPosition(Organism o){
-		Position p = organisms.get(o);
-		if(p == null){
-			throw new NullPointerException();
-		}
-		return new Position(p);
+	public boolean contains(Organism o){
+		return organisms.containsKey(o);
 	}
 	
-	public void move(Organism o, Position newPos){
-		removeOrganismFromPosmap(o,organisms.get(o));
-		putOrganismIntoPosmap(o,newPos);
-		organisms.put(o, newPos);
+	public boolean contains(Position p){
+		return posmap.containsKey(p);
 	}
-	
-	private void removeOrganismFromPosmap(Organism o, Position pos){
-		if(posmap.get(pos) == null){
-			throw new NullPointerException();
-		}
-		if(posmap.get(pos).size() <= 1){
-			posmap.remove(pos);
-		}else{
-			posmap.get(pos).remove(o);
-		}
-	}
-	
-	private void putOrganismIntoPosmap(Organism o, Position pos){
-		if(!posmap.containsKey(pos)){
-			posmap.put(pos, new HashSet<Organism>());
-		}
-		posmap.get(pos).add(o);
-	}
-	
+
 	public Set<Organism> getOrganisms(){
+		return Collections.unmodifiableSet(organisms.keySet());
+	}
+	public Set<Organism> getCopyOfOrganisms(){
 		return new HashSet<Organism>(organisms.keySet());
 	}
 
-	public HashSet<Organism> getOrganisms(Position pos){
-		if(!posmap.containsKey(pos)){
-			return new HashSet<Organism>();
-		}
-		return new HashSet<Organism>(posmap.get(pos));
+	public final Position getPosition(Organism o){
+		return organisms.get(o);
 	}
-	
-	public Set<Position> getPositions(){
-		Set<Position> ret = new HashSet<Position>();
-		for(Position p : posmap.keySet()){
-			ret.add(new Position(p));
-		}
-		return ret;
-	}
-	
-	public Iterator<Entry<Organism, Position>> iterator(){
-		return organisms.entrySet().iterator();
+	public final Position getCopyOfPosition(Organism o){
+		return new Position(organisms.get(o));
 	}
 
+	public Set<ConstPosition> getPositions(){
+		return Collections.unmodifiableSet(posmap.keySet());
+	}
+	public Set<Position> getCopyOfPositions(){
+		return new HashSet<Position>(posmap.keySet());
+	}
+	
+	public Set<Organism> getOrganisms(Position p){
+		if(!posmap.containsKey(p)){
+			return new HashSet<Organism>();
+		}else{
+			return Collections.unmodifiableSet(posmap.get(p));
+		}
+	}public Set<Organism> getCopyOfOrganisms(Position p){
+		if(!posmap.containsKey(p)){
+			return new HashSet<Organism>();
+		}else{
+			return new HashSet<Organism>(posmap.get(p));
+		}
+	}
+	
+	public Collection<HashSet<Organism>> getOrganismChunks(){
+		return Collections.unmodifiableCollection(posmap.values());
+	}
+	
+	public void clear(){
+		organisms.clear();
+		posmap.clear();
+	}
+	
+	public void move(Organism o, Position npos){
+		if(o == null || npos == null) throw new NullPointerException();
+		if(!organisms.containsKey(o)) return;
+		
+		ConstPosition opos = organisms.get(o);
+		if(opos.equals(npos)) return;
+		
+		
+		ConstPosition p = new ConstPosition(npos);
+		
+		this.removeFromPosmap(o, opos);
+		organisms.put(o, p);
+		this.addToPosmap(o, p);
+	}
+
+	
 	public void addNear(Organism o, Position position) {
-		Position pos = position;
+		Position pos = new Position(position);
 		int i = 0;
 		int p = 0;
 		int c = 1;
@@ -128,5 +133,24 @@ public class OrganismsInWorld{
 			}
 		}
 		this.add(o, pos);
+	}
+	
+	
+
+	
+	private void addToPosmap(Organism o, ConstPosition p) {
+		if(!posmap.containsKey(p)){
+			posmap.put(p, new HashSet<Organism>());
+		}
+		posmap.get(p).add(o);
+	}
+
+	private void removeFromPosmap(Organism o, ConstPosition p) {
+		HashSet<Organism> orgs = posmap.get(p);
+		if(orgs.size() == 1){
+			posmap.remove(p);
+		}else{
+			orgs.remove(o);
+		}
 	}
 }

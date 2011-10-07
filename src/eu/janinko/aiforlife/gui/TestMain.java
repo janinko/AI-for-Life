@@ -41,11 +41,11 @@ public class TestMain {
 		world.setOrganismManager(organismManager);
 		world.setBreedManager(breedManager);
 		
-		organismManager.setPrayProbability(0.5);
+		organismManager.setPrayProbability(0.80);
 		organismManager.setUseStrictPray(true);
 		organismManager.setUseStrictPredator(true);
 		
-		world.generate(520);
+		world.generate(240);
 		
 		return world;
 	}

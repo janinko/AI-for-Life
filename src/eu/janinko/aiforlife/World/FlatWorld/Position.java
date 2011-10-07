@@ -121,6 +121,8 @@ public class Position{
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + sizeX;
+		result = prime * result + sizeY;
 		result = prime * result + x;
 		result = prime * result + y;
 		return result;
@@ -132,9 +134,13 @@ public class Position{
 			return true;
 		if (obj == null)
 			return false;
-		if (getClass() != obj.getClass())
+		if (!(obj instanceof Position))
 			return false;
 		Position other = (Position) obj;
+		if (sizeX != other.sizeX)
+			return false;
+		if (sizeY != other.sizeY)
+			return false;
 		if (x != other.x)
 			return false;
 		if (y != other.y)

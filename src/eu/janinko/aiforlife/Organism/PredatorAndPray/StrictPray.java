@@ -40,17 +40,18 @@ public class StrictPray extends Pray {
 			e.printStackTrace();
 			return;
 		}
+		double[] gen = this.dna.getGen(statepointer);
 		if(wo == null){
-			mw.moveForward(this, this.dna.getGenInfo(statepointer, 1));
+			mw.moveForward(this, gen[1]);
 		}else if(wo.isOrganism()){
 			Organism o = wo.getOrganism();
 			if(o instanceof Pray){
-				if(this.dna.getGenInfo(statepointer, 0) > 0){
+				if(gen[0] > 0){
 					mw.moveForward(this, 1);
 				}
 			}
 		}
-		mw.rotate(this, this.dna.getGenInfo(statepointer, 2), 0, 0);
+		mw.rotate(this, gen[2], 0, 0);
 	}
 	
 

@@ -39,6 +39,8 @@ public class FlatWorld implements World, WorldStatistics, MovableWorld, Sensable
 	private int colision;
 	private int born;
 	
+	private boolean propertiesGenerated = false;
+	
 	public FlatWorld(){
 		this(10,10);
 	}
@@ -135,28 +137,28 @@ public class FlatWorld implements World, WorldStatistics, MovableWorld, Sensable
 		}
 		
 		newborns.clear();
+		propertiesGenerated = false;
 	}
 
 	private void handleColisions() {
 		boolean solved = true;
 		do{
-			solved = true;;
+			solved = true;
+			
 			HashSet<Organism> colidedOrganisms = new HashSet<Organism>();
-			Set<Position> positions = organismsInNextState.getPositions();
-			for(Object obj : positions.toArray()){
-				Position pos = (Position) obj;
-				HashSet<Organism> orgs = organismsInNextState.getOrganisms(pos);
-				if(orgs.size() > 1){
-					solved = false;
-					colidedOrganisms.addAll(orgs);
-					this.onCollision(orgs);
-				}
+			for(HashSet<Organism> orgs : organismsInNextState.getOrganismChunks()){
+				if(orgs.size() < 2) continue;
+				
+				colidedOrganisms.addAll(orgs);
+				this.onCollision(orgs);
+				solved = false;
 			}
+
 			for(Organism o : colidedOrganisms){
 				if(!o.isAlive()) continue;
 				Position pos = organisms.getPosition(o);
 				if(pos == null){
-					pos = new Position(sizeX,sizeY);
+					throw new NullPointerException();
 				}
 				organismsInNextState.move(o, pos);
 			}
@@ -167,18 +169,22 @@ public class FlatWorld implements World, WorldStatistics, MovableWorld, Sensable
 	public void onDie(Organism o) {
 		//System.out.println("Organism " + o + " died at " + organisms.getPosition(o));
 		organisms.remove(o);
-		organismsInNextState.remove(o);
+		if(organismsInNextState != null){
+			System.out.print(".");
+			organismsInNextState.remove(o);
+		}
 		died++;
 	}
 
 	@Override
 	public void onCollision(Set<Organism> organisms) {
 		colision++;
-		
+
+		HashSet<Organism> orgs = new HashSet<Organism>(organisms);
 		for(Organism o : organisms){
-			HashSet<Organism> orgs = new HashSet<Organism>(organisms);
 			orgs.remove(o);
 			o.onCollision(orgs);
+			orgs.add(o);
 		}
 	}
 
@@ -214,63 +220,62 @@ public class FlatWorld implements World, WorldStatistics, MovableWorld, Sensable
 		return this.born;
 	}
 
+	private double propertyMinBread;
+	private double propertyMaxBread;
+	private double propertyAvgBread;
+	private void generatePropertyes(){
+		if(propertiesGenerated) return;
+		
+		propertyMinBread = 1;
+		propertyMaxBread = 0;
+		propertyAvgBread = 0;
+		int count = 0;
+		
+		for(Organism o : organisms.getOrganisms()){
+			double breedery = getGeneticInformation(o).getBreedery();
+			if(breedery < propertyMinBread){
+				propertyMinBread = breedery;
+			}
+			if(breedery > propertyMaxBread){
+				propertyMinBread = breedery;
+			}
+			propertyAvgBread += breedery;
+			count++;
+		}
+		propertyAvgBread /= count;
+		
+		propertiesGenerated = true;
+	}
+	
+	private GeneticInformation getGeneticInformation(Organism o){
+		GeneticInformation gi = null;
+		if(o instanceof DullOrganism){
+			gi = ((DullOrganism)o).getGeneticCode();
+		}
+		if(o instanceof Pray){
+			gi = ((Pray)o).getDNA();
+		}
+		if(o instanceof Predator){
+			gi = ((Predator)o).getDNA();
+		}
+		return gi;
+	}
+	
+
 	@Override
 	public double getProperty(String propertyname) {
-		double d = 0;
-		if(propertyname.equals("minbreed")){
-			d = 1;
-			for(Organism o : organisms.getOrganisms()){
-				GeneticInformation gi = null;
-				if(o instanceof DullOrganism){
-					gi = ((DullOrganism)o).getGeneticCode();
-				}
-				if(o instanceof Pray){
-					gi = ((Pray)o).getDNA();
-				}
-				if(o instanceof Predator){
-					gi = ((Predator)o).getDNA();
-				}
-				if(gi.getBreedery() < d){
-					d = gi.getBreedery();
-				}
-			}
+		this.generatePropertyes();
+		
+		if(propertyname.equals("avgbreed")){
+			return propertyMinBread;
 		}else if(propertyname.equals("avgbreed")){
-			d = 0;
-			for(Organism o : organisms.getOrganisms()){
-				GeneticInformation gi = null;
-				if(o instanceof DullOrganism){
-					gi = ((DullOrganism)o).getGeneticCode();
-				}
-				if(o instanceof Pray){
-					gi = ((Pray)o).getDNA();
-				}
-				if(o instanceof Predator){
-					gi = ((Predator)o).getDNA();
-				}
-				d += gi.getBreedery();
-			}
-			d /= organisms.getOrganisms().size();
+			return propertyAvgBread;
 		}else if(propertyname.equals("maxbreed")){
-			d = 0;
-			for(Organism o : organisms.getOrganisms()){
-				GeneticInformation gi = null;
-				if(o instanceof DullOrganism){
-					gi = ((DullOrganism)o).getGeneticCode();
-				}
-				if(o instanceof Pray){
-					gi = ((Pray)o).getDNA();
-				}
-				if(o instanceof Predator){
-					gi = ((Predator)o).getDNA();
-				}
-				if(gi.getBreedery() > d){
-					d = gi.getBreedery();
-				}
-			}
+			return propertyMaxBread;
 		}else{
 			//throw new UnknowParameterException();
 		}
-		return d;
+		return 0;
 	}
 
 	@Override
@@ -291,7 +296,7 @@ public class FlatWorld implements World, WorldStatistics, MovableWorld, Sensable
 			m = 1;
 		}
 
-		Position newpos = organismsInNextState.getPosition(o);
+		Position newpos = organismsInNextState.getCopyOfPosition(o);
 		newpos.moveForward(m);
 
 		this.organismsInNextState.move(o, newpos);
@@ -315,7 +320,7 @@ public class FlatWorld implements World, WorldStatistics, MovableWorld, Sensable
 			movey = -1;
 		}
 
-		Position newpos = organismsInNextState.getPosition(o);
+		Position newpos = organismsInNextState.getCopyOfPosition(o);
 		newpos.move(movex, movey);
 
 		this.organismsInNextState.move(o, newpos);
@@ -334,8 +339,6 @@ public class FlatWorld implements World, WorldStatistics, MovableWorld, Sensable
 		
 		Position newpos = organismsInNextState.getPosition(o);
 		newpos.rotate(r);
-
-		this.organismsInNextState.move(o, newpos);
 	}
 
 	@Override
@@ -345,9 +348,10 @@ public class FlatWorld implements World, WorldStatistics, MovableWorld, Sensable
 
 	@Override
 	public WorldObject senseAhead(Organism o) throws UnsupportedSenseException {
-		Position pos = organisms.getPosition(o);
+		Position pos = organisms.getCopyOfPosition(o);
+		Set<Organism> orgs = organisms.getOrganisms(pos);
+		
 		pos.moveForward(1);
-		HashSet<Organism> orgs = organisms.getOrganisms(pos);
 		if(orgs.isEmpty()) return null;
 		return new OrganismWorldObject((Organism) orgs.toArray()[0]);
 	}
@@ -371,7 +375,13 @@ public class FlatWorld implements World, WorldStatistics, MovableWorld, Sensable
 	public void breed(Organism[] wb) {
 		try {
 			Organism o = this.breedManager.breed(wb);
-			newborns.put(o,organismsInNextState.getPosition(wb[0]));
+			Position p;
+			if(organismsInNextState != null){
+				p = organismsInNextState.getPosition(wb[0]);
+			}else{
+				p = organisms.getPosition(wb[0]);
+			}
+			newborns.put(o,p);
 		} catch (UnsupportedOrganismException e) {
 			e.printStackTrace();
 		}

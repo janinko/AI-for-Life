@@ -15,7 +15,8 @@ import eu.janinko.aiforlife.World.SensableWorld.SenseStyle;
 import eu.janinko.aiforlife.World.SensableWorld.UnsupportedSenseException;
 
 public class Predator implements Organism {
-	private int score;
+	protected int score;
+	protected int nextScore;
 	private boolean alive;
 	
 	protected GeneticInformation dna;
@@ -57,12 +58,8 @@ public class Predator implements Organism {
 
 	@Override
 	public void damage(int damage) {
-		this.score -= damage;
-		if(score <= dieThreeshold){
-			die();
-		}else{
-			onDamage(damage);
-		}
+		this.nextScore -= damage;
+		onDamage(damage);
 	}
 
 	@Override
@@ -73,6 +70,18 @@ public class Predator implements Organism {
 
 	@Override
 	public void gotoNextState() {
+		score = nextScore;
+		score--;
+		if(score > duplicateThreeshold){
+			Organism[] wb = new Organism[1];
+			wb[0] = this;
+			this.world.breed(wb);
+			score -= duplicateThreeshold;
+		}
+		if(score < dieThreeshold){
+			this.die();
+			return;
+		}
 	}
 
 	@Override
@@ -87,13 +96,7 @@ public class Predator implements Organism {
 			
 			o.damage(damage);
 			if(o instanceof Pray){
-				score+=scoreGain;
-				if(score > duplicateThreeshold){
-					Organism[] wb = new Organism[1];
-					wb[0] = this;
-					this.world.breed(wb);
-					score -= duplicateThreeshold;
-				}
+				nextScore+=scoreGain;
 			}
 		}
 	}
@@ -108,12 +111,11 @@ public class Predator implements Organism {
 		if(statepointer + 1 >= this.dna.getLength()){
 			statepointer = 0;
 		}
+		nextScore = score;
 			
 		if(isMoving()){
 			this.move();
 		}
-
-		this.damage(1);
 	}
 	
 	private boolean isMoving(){
@@ -173,16 +175,23 @@ public class Predator implements Organism {
 		return this.dna;
 	}
 
+	private int hashcode=-1;
 	@Override
 	public int hashCode() {
+		if(hashcode == -1){
+			genHashCode();
+		}
+		return hashcode;
+	}
+	
+	private void genHashCode(){
 		final int prime = 31;
-		int result = 1;
-		result = prime * result + b;
-		result = prime * result + g;
-		result = prime * result
+		hashcode = 1;
+		hashcode = prime * hashcode + b;
+		hashcode = prime * hashcode + g;
+		hashcode = prime * hashcode
 				+ ((generator == null) ? 0 : generator.hashCode());
-		result = prime * result + r;
-		return result;
+		hashcode = prime * hashcode + r;
 	}
 
 	@Override
@@ -208,4 +217,8 @@ public class Predator implements Organism {
 		return true;
 	}
 
+	@Override
+	public String toString() {
+		return "Predator [score=" + score + ", hashCode()=" + hashCode() + "]";
+	}
 }
