@@ -101,12 +101,12 @@ public class MainWindow extends JFrame implements ActionListener {
 					      " minbreed: " + w.getProperty("minbreed") + lsep +
 					      " avgbreed: " + w.getProperty("avgbreed") + lsep +
 					      " maxbreed: " + w.getProperty("maxbreed") + lsep +
+					      " Pray: " + w.getProperty("praycount") + lsep +
+					      " Predator: " + w.getProperty("predatorcount") + lsep +
 					      "Overall:" + lsep + 
 						  " Born: " + born + lsep +
 					      " Damaged:  "+ damaged + lsep +
 					      " Died: " + died + lsep +
-					      " Pray: " + w.getProperty("praycount") + lsep +
-					      " Predator: " + w.getProperty("predatorcount") + lsep +
 					      "Time: " + time);
 		}
 	}

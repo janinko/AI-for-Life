@@ -241,7 +241,7 @@ public class FlatWorld implements World, WorldStatistics, MovableWorld, Sensable
 				propertyMinBread = breedery;
 			}
 			if(breedery > propertyMaxBread){
-				propertyMinBread = breedery;
+				propertyMaxBread = breedery;
 			}
 			propertyAvgBread += breedery;
 			if(o instanceof Pray){
@@ -276,7 +276,7 @@ public class FlatWorld implements World, WorldStatistics, MovableWorld, Sensable
 	public double getProperty(String propertyname) {
 		this.generatePropertyes();
 		
-		if(propertyname.equals("avgbreed")){
+		if(propertyname.equals("minbreed")){
 			return propertyMinBread;
 		}else if(propertyname.equals("avgbreed")){
 			return propertyAvgBread;
@@ -289,7 +289,7 @@ public class FlatWorld implements World, WorldStatistics, MovableWorld, Sensable
 		}else{
 			//throw new UnknowParameterException();
 		}
-		return 0;
+		return -1;
 	}
 
 	@Override
