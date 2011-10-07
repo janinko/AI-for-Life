@@ -223,12 +223,16 @@ public class FlatWorld implements World, WorldStatistics, MovableWorld, Sensable
 	private double propertyMinBread;
 	private double propertyMaxBread;
 	private double propertyAvgBread;
+	private double prayCount;
+	private double predatorCount;
 	private void generatePropertyes(){
 		if(propertiesGenerated) return;
 		
 		propertyMinBread = 1;
 		propertyMaxBread = 0;
 		propertyAvgBread = 0;
+		prayCount = 0;
+		predatorCount = 0;
 		int count = 0;
 		
 		for(Organism o : organisms.getOrganisms()){
@@ -240,6 +244,12 @@ public class FlatWorld implements World, WorldStatistics, MovableWorld, Sensable
 				propertyMinBread = breedery;
 			}
 			propertyAvgBread += breedery;
+			if(o instanceof Pray){
+				prayCount++;
+			}
+			if(o instanceof Predator){
+				predatorCount++;
+			}
 			count++;
 		}
 		propertyAvgBread /= count;
@@ -272,6 +282,10 @@ public class FlatWorld implements World, WorldStatistics, MovableWorld, Sensable
 			return propertyAvgBread;
 		}else if(propertyname.equals("maxbreed")){
 			return propertyMaxBread;
+		}else if(propertyname.equals("praycount")){
+			return prayCount;
+		}else if(propertyname.equals("predatorcount")){
+			return predatorCount;
 		}else{
 			//throw new UnknowParameterException();
 		}
@@ -349,9 +363,9 @@ public class FlatWorld implements World, WorldStatistics, MovableWorld, Sensable
 	@Override
 	public WorldObject senseAhead(Organism o) throws UnsupportedSenseException {
 		Position pos = organisms.getCopyOfPosition(o);
+		pos.moveForward(1);
 		Set<Organism> orgs = organisms.getOrganisms(pos);
 		
-		pos.moveForward(1);
 		if(orgs.isEmpty()) return null;
 		return new OrganismWorldObject((Organism) orgs.toArray()[0]);
 	}

@@ -105,6 +105,8 @@ public class MainWindow extends JFrame implements ActionListener {
 						  " Born: " + born + lsep +
 					      " Damaged:  "+ damaged + lsep +
 					      " Died: " + died + lsep +
+					      " Pray: " + w.getProperty("praycount") + lsep +
+					      " Predator: " + w.getProperty("predatorcount") + lsep +
 					      "Time: " + time);
 		}
 	}
