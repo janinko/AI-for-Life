@@ -32,4 +32,6 @@ public interface Organism {
 
 	void gainScore(int i);
 
+	int getScore();
+
 }

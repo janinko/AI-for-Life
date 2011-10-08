@@ -201,6 +201,11 @@ public class DullOrganism implements Organism {
 	public void gainScore(int i) {		
 	}
 
+	@Override
+	public int getScore() {
+		return 0;
+	}
+
 
 	
 }

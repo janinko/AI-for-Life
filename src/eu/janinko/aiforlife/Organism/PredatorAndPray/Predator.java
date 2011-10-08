@@ -226,4 +226,9 @@ public class Predator implements Organism {
 	public void gainScore(int i) {
 		this.score += i;
 	}
+
+	@Override
+	public int getScore() {
+		return score;
+	}
 }

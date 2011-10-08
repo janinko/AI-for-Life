@@ -219,4 +219,9 @@ public class Pray implements Organism {
 	@Override
 	public void gainScore(int i) {
 	}
+
+	@Override
+	public int getScore() {
+		return 0;
+	}
 }
