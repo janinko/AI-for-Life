@@ -5,10 +5,13 @@ import javax.swing.SwingUtilities;
 import eu.janinko.aiforlife.BreedManager.DullBreedManager;
 import eu.janinko.aiforlife.BreedManager.PredatorAndPrayBreedManager;
 import eu.janinko.aiforlife.Organism.DullOrganism.DullOrganismManager;
+import eu.janinko.aiforlife.Organism.GPOrganism.GPOrganismBreedManager;
+import eu.janinko.aiforlife.Organism.GPOrganism.GPOrganismManager;
 import eu.janinko.aiforlife.Organism.PredatorAndPray.PredatorAndPrayOrganismManager;
 import eu.janinko.aiforlife.World.World;
 import eu.janinko.aiforlife.World.FlatWorld.DrawableFlatWorld;
 import eu.janinko.aiforlife.World.FlatWorld.FlatWorld;
+import eu.janinko.aiforlife.World.FlatWorld.NoninteractFlatWorld;
 
 public class TestMain {
 	
@@ -16,12 +19,13 @@ public class TestMain {
 		
 
 		
-		SwingUtilities.invokeLater(new MainWindowRunnable(predatorAndPrayTest()));
+		SwingUtilities.invokeLater(new MainWindowRunnable(GPTest()));
 
 	}
-	
+
+	@SuppressWarnings("unused")
 	private static World dullTest(){
-		FlatWorld world = new DrawableFlatWorld(30,30);
+		FlatWorld world = new FlatWorld(30,30);
 		DullOrganismManager organismManager = new DullOrganismManager();
 		DullBreedManager breedManager = new DullBreedManager(world);
 		world.setOrganismManager(organismManager);
@@ -33,9 +37,22 @@ public class TestMain {
 		
 		return world;
 	}
-	
+
+	private static World GPTest(){
+		NoninteractFlatWorld world = new NoninteractFlatWorld(30,30);
+		GPOrganismManager organismManager = new GPOrganismManager(world);
+		GPOrganismBreedManager breedManager = new GPOrganismBreedManager(world);
+		world.setOrganismManager(organismManager);
+		world.setBreedManager(breedManager);
+				
+		world.generate(125);
+		
+		return world;
+	}
+
+	@SuppressWarnings("unused")
 	private static World predatorAndPrayTest(){
-		FlatWorld world = new DrawableFlatWorld(30,30);
+		FlatWorld world = new FlatWorld(30,30);
 		PredatorAndPrayOrganismManager organismManager = new PredatorAndPrayOrganismManager();
 		PredatorAndPrayBreedManager breedManager = new PredatorAndPrayBreedManager(world);
 		world.setOrganismManager(organismManager);
