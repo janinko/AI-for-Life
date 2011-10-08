@@ -6,9 +6,9 @@ import eu.janinko.aiforlife.Organism.Organism;
 import eu.janinko.aiforlife.Organism.OrganismManager;
 import eu.janinko.aiforlife.Organism.DullOrganism.DullOrganism;
 import eu.janinko.aiforlife.Organism.DullOrganism.DullOrganismManager;
-import eu.janinko.aiforlife.Organism.DullOrganism.GeneticInformation;
 import eu.janinko.aiforlife.Organism.DullOrganism.InvalidGeneticCodeException;
 import eu.janinko.aiforlife.World.World;
+import eu.janinko.aiforlife.brain.DullGeneticInformation;
 
 public class DullBreedManager implements BreedManager {
 	Random generator;
@@ -33,8 +33,8 @@ public class DullBreedManager implements BreedManager {
 
 		DullOrganismManager dom = (DullOrganismManager) om;
 
-		GeneticInformation gc1 = o1.getGeneticCode();
-		GeneticInformation gc2 = o2.getGeneticCode();
+		DullGeneticInformation gc1 = o1.getGeneticCode();
+		DullGeneticInformation gc2 = o2.getGeneticCode();
 		int min = gc1.getLength();
 		int max = gc2.getLength();
 		if(max < min){
@@ -44,7 +44,7 @@ public class DullBreedManager implements BreedManager {
 		}
 
 		int genlen = gc1.getGenLen();
-		GeneticInformation gc = new GeneticInformation(genlen,0);
+		DullGeneticInformation gc = new DullGeneticInformation(genlen,0);
 		
 		int len;
 		if(max == min){
@@ -95,7 +95,7 @@ public class DullBreedManager implements BreedManager {
 		if(!(individual instanceof DullOrganism)) throw new UnsupportedOrganismException();
 		DullOrganism o = (DullOrganism) individual;
 
-		GeneticInformation gc = o.getGeneticCode();
+		DullGeneticInformation gc = o.getGeneticCode();
 		
 		switch(generator.nextInt(4)){
 		case 0:{

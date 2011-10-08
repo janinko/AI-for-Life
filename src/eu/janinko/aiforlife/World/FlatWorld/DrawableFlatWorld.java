@@ -8,13 +8,9 @@ import java.awt.Graphics2D;
 import eu.janinko.aiforlife.Organism.Organism;
 import eu.janinko.aiforlife.World.DrawableWorld;
 
-public class DrawableFlatWorld extends FlatWorld implements DrawableWorld {
-	
+public abstract class DrawableFlatWorld extends AbstractFlatWorld implements DrawableWorld {
 	private int gridsize = 20;
 	private int space = 6;
-	
-	public DrawableFlatWorld() {
-	}
 
 	public DrawableFlatWorld(int sizeX, int sizeY) {
 		super(sizeX, sizeY);
@@ -29,23 +25,20 @@ public class DrawableFlatWorld extends FlatWorld implements DrawableWorld {
 		}
 	}
 	
-	private void paintGrid(Graphics2D g) {
-		int sizex = this.getSizeY();
-		int sizey = this.getSizeX();
-		
+	private void paintGrid(Graphics2D g) {		
 		g.setColor(Color.GRAY);
 		g.setStroke(new BasicStroke(1));
-		for(int i=0; i<=sizex; i++){
-			g.drawLine(space, space + i*gridsize, space + sizey*gridsize, space + i*gridsize);
+		for(int i=0; i<=sizeX; i++){
+			g.drawLine(space, space + i*gridsize, space + sizeY*gridsize, space + i*gridsize);
 		}
-		for(int i=0; i<=sizey; i++){
-			g.drawLine(space+ i*gridsize, space , space + i*gridsize, space + sizex*gridsize);
+		for(int i=0; i<=sizeY; i++){
+			g.drawLine(space+ i*gridsize, space , space + i*gridsize, space + sizeX*gridsize);
 		}
 		
 	}
 	
 	private void paintOrganism(Graphics2D g, Organism o){
-		Position pos = this.getOrganismPosition(o);
+		Position pos = organisms.getPosition(o);
 		
 		g.setColor(new Color(o.color(0), o.color(1), o.color(2)));
 		g.fillOval((int)(pos.getPosX() * gridsize + space + 2), (int)(pos.getPosY()*gridsize + space + 2), gridsize - 4, gridsize - 4);

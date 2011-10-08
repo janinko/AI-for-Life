@@ -1,8 +1,8 @@
-package eu.janinko.aiforlife.Organism.DullOrganism;
+package eu.janinko.aiforlife.brain;
 
 import java.util.Random;
 
-public class GeneticInformation {
+public class DullGeneticInformation {
 	private double breedery;
 	
 	private int genlen;
@@ -10,7 +10,7 @@ public class GeneticInformation {
 
 	private Random generator = new Random();
 	
-	public GeneticInformation(int genlen, int length){
+	public DullGeneticInformation(int genlen, int length){
 		
 		this.genlen = genlen;
 		
@@ -29,11 +29,11 @@ public class GeneticInformation {
 		}
 	}
 	
-	public GeneticInformation(int genlen){
+	public DullGeneticInformation(int genlen){
 		this(genlen, -1);
 	}
 
-	public GeneticInformation(GeneticInformation dna2) {
+	public DullGeneticInformation(DullGeneticInformation dna2) {
 		this.breedery = dna2.getBreedery();
 		this.genlen = dna2.getGenLen();
 

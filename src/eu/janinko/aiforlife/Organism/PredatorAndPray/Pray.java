@@ -5,7 +5,6 @@ import java.util.Random;
 import java.util.Set;
 
 import eu.janinko.aiforlife.Organism.Organism;
-import eu.janinko.aiforlife.Organism.DullOrganism.GeneticInformation;
 import eu.janinko.aiforlife.World.MovableWorld;
 import eu.janinko.aiforlife.World.SensableWorld;
 import eu.janinko.aiforlife.World.World;
@@ -13,6 +12,7 @@ import eu.janinko.aiforlife.World.WorldObject;
 import eu.janinko.aiforlife.World.MovableWorld.MoveStyle;
 import eu.janinko.aiforlife.World.SensableWorld.SenseStyle;
 import eu.janinko.aiforlife.World.SensableWorld.UnsupportedSenseException;
+import eu.janinko.aiforlife.brain.DullGeneticInformation;
 
 public class Pray implements Organism {
 	private boolean alive = true;
@@ -20,7 +20,7 @@ public class Pray implements Organism {
 	private int age = 0;
 	private int score = 0;
 	
-	protected GeneticInformation dna;
+	protected DullGeneticInformation dna;
 	protected int statepointer = 0;
 	
 	protected World world;
@@ -35,10 +35,10 @@ public class Pray implements Organism {
 	
 	public Pray(World world){
 		this(world,null);
-		dna = new GeneticInformation(5);
+		dna = new DullGeneticInformation(5);
 	}
 
-	public Pray(World world, GeneticInformation geneticCode) {
+	public Pray(World world, DullGeneticInformation geneticCode) {
 		if(!(world instanceof MovableWorld))
 			throw new InvalidParameterException("The world mus be MovableWorld");
 
@@ -52,7 +52,7 @@ public class Pray implements Organism {
 	}
 
 	public Pray(Pray o) {
-		this(o.world,new GeneticInformation(o.getDNA()));
+		this(o.world,new DullGeneticInformation(o.getDNA()));
 	}
 
 	@Override
@@ -167,7 +167,7 @@ public class Pray implements Organism {
 		return 0;
 	}
 	
-	public GeneticInformation getDNA(){
+	public DullGeneticInformation getDNA(){
 		return this.dna;
 	}
 
@@ -219,7 +219,11 @@ public class Pray implements Organism {
 	}
 
 	@Override
-	public double getScore() {
+	public void gainScore(int i) {
+	}
+
+	@Override
+	public int getScore() {
 		return score;
 	}
 }

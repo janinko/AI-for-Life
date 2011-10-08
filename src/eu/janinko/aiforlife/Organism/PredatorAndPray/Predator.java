@@ -5,7 +5,6 @@ import java.util.Random;
 import java.util.Set;
 
 import eu.janinko.aiforlife.Organism.Organism;
-import eu.janinko.aiforlife.Organism.DullOrganism.GeneticInformation;
 import eu.janinko.aiforlife.World.MovableWorld;
 import eu.janinko.aiforlife.World.SensableWorld;
 import eu.janinko.aiforlife.World.World;
@@ -13,13 +12,14 @@ import eu.janinko.aiforlife.World.WorldObject;
 import eu.janinko.aiforlife.World.MovableWorld.MoveStyle;
 import eu.janinko.aiforlife.World.SensableWorld.SenseStyle;
 import eu.janinko.aiforlife.World.SensableWorld.UnsupportedSenseException;
+import eu.janinko.aiforlife.brain.DullGeneticInformation;
 
 public class Predator implements Organism {
 	protected int score = 0;
 	protected int nextScore;
 	private boolean alive = true;;
 	
-	protected GeneticInformation dna;
+	protected DullGeneticInformation dna;
 	protected int statepointer = 0;
 	
 	protected World world;
@@ -37,10 +37,10 @@ public class Predator implements Organism {
 	
 	public Predator(World world){
 		this(world,null);
-		dna = new GeneticInformation(5);
+		dna = new DullGeneticInformation(5);
 	}
 
-	public Predator(World world, GeneticInformation geneticCode) {
+	public Predator(World world, DullGeneticInformation geneticCode) {
 		if(!(world instanceof MovableWorld))
 			throw new InvalidParameterException("The world mus be MovableWorld");
 		
@@ -54,7 +54,7 @@ public class Predator implements Organism {
 	}
 
 	public Predator(Predator o) {
-		this(o.world,new GeneticInformation(o.getDNA()));
+		this(o.world,new DullGeneticInformation(o.getDNA()));
 	}
 
 	@Override
@@ -172,7 +172,7 @@ public class Predator implements Organism {
 		return 0;
 	}
 	
-	public GeneticInformation getDNA(){
+	public DullGeneticInformation getDNA(){
 		return this.dna;
 	}
 
@@ -224,7 +224,12 @@ public class Predator implements Organism {
 	}
 
 	@Override
-	public double getScore() {
+	public void gainScore(int i) {
+		this.score += i;
+	}
+
+	@Override
+	public int getScore() {
 		return score;
 	}
 }

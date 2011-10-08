@@ -7,8 +7,8 @@ import java.util.Set;
 
 import eu.janinko.aiforlife.Organism.Organism;
 import eu.janinko.aiforlife.Organism.OrganismManager;
-import eu.janinko.aiforlife.Organism.DullOrganism.GeneticInformation;
 import eu.janinko.aiforlife.World.World;
+import eu.janinko.aiforlife.brain.DullGeneticInformation;
 
 public class PredatorAndPrayOrganismManager implements OrganismManager {
 
@@ -48,7 +48,7 @@ public class PredatorAndPrayOrganismManager implements OrganismManager {
 		return o;
 	}
 	
-	public Organism buildOrganism(World w, GeneticInformation geneticCode) {
+	public Organism buildOrganism(World w, DullGeneticInformation geneticCode) {
 		Organism o;
 		if(generator.nextDouble() < prayProbability){
 			if(useStrictPray){
@@ -75,7 +75,7 @@ public class PredatorAndPrayOrganismManager implements OrganismManager {
 		}
 	}
 	
-	public Pray buildPray(World w, GeneticInformation geneticCode){
+	public Pray buildPray(World w, DullGeneticInformation geneticCode){
 		if(useStrictPray){
 			return new StrictPray(w,geneticCode);
 		}else{
@@ -91,7 +91,7 @@ public class PredatorAndPrayOrganismManager implements OrganismManager {
 		}
 	}
 	
-	public Predator buildPredator(World w, GeneticInformation geneticCode){
+	public Predator buildPredator(World w, DullGeneticInformation geneticCode){
 		if(useStrictPredator){
 			return new StrictPredator(w,geneticCode);
 		}else{
