@@ -19,7 +19,6 @@ public class FlatWorld extends AbstractFlatWorld implements WorldStatistics {
 	private BreedManager breedManager;
 	private OrganismManager organismManager;
 
-	OrganismsInWorld organisms;
 	OrganismsInWorld organismsInNextState;
 	
 	HashMap<Organism, Position> newborns;
