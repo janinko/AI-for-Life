@@ -16,15 +16,10 @@ import eu.janinko.aiforlife.World.WorldStatistics;
 import eu.janinko.aiforlife.brain.DullGeneticInformation;
 
 public class FlatWorld extends AbstractFlatWorld implements WorldStatistics {
-	private BreedManager breedManager;
-	private OrganismManager organismManager;
 
 	OrganismsInWorld organismsInNextState;
 	
 	HashMap<Organism, Position> newborns;
-	
-	int sizeX;
-	int sizeY;
 	
 	private int damaged;
 	private int died;
