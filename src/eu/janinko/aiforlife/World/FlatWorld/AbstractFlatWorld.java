@@ -5,6 +5,7 @@ import java.util.EnumSet;
 import java.util.Set;
 
 import eu.janinko.aiforlife.BreedManager.BreedManager;
+import eu.janinko.aiforlife.BreedManager.UnsupportedOrganismException;
 import eu.janinko.aiforlife.Organism.Organism;
 import eu.janinko.aiforlife.Organism.OrganismManager;
 import eu.janinko.aiforlife.World.MovableWorld;
@@ -30,8 +31,13 @@ public abstract class AbstractFlatWorld implements World, MovableWorld, Sensable
 
 	@Override
 	public void breed(Organism[] wb) {
-		// TODO Auto-generated method stub
-
+		try {
+			Organism o = this.breedManager.breed(wb);
+			Position p = organisms.getPosition(wb[0]);
+			organisms.addNear(o, p);
+		} catch (UnsupportedOrganismException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	@Override
@@ -132,9 +138,8 @@ public abstract class AbstractFlatWorld implements World, MovableWorld, Sensable
 	@Override
 	public WorldObject senseAhead(Organism o) throws UnsupportedSenseException {
 		Position pos = organisms.getCopyOfPosition(o);
-		Set<Organism> orgs = organisms.getOrganisms(pos);
-		
 		pos.moveForward(1);
+		Set<Organism> orgs = organisms.getOrganisms(pos);
 		if(orgs.isEmpty()) return null;
 		return new OrganismWorldObject((Organism) orgs.toArray()[0]);
 	}
