@@ -7,6 +7,8 @@ public interface WorldObject {
 	boolean isOrganism();
 	
 	Organism getOrganism();
+
+	void attacked(Organism o, int attack);
 	
 	
 

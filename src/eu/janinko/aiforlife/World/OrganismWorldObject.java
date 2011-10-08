@@ -1,6 +1,8 @@
 package eu.janinko.aiforlife.World;
 
+import eu.janinko.aiforlife.Organism.AttackingOrganism;
 import eu.janinko.aiforlife.Organism.Organism;
+import eu.janinko.aiforlife.Organism.GPOrganism.GPOrganism;
 
 public class OrganismWorldObject implements WorldObject {
 	Organism o;
@@ -18,6 +20,17 @@ public class OrganismWorldObject implements WorldObject {
 	@Override
 	public boolean isOrganism() {
 		return true;
+	}
+
+
+	@Override
+	public void attacked(Organism o, int attack) {
+		if(o instanceof AttackingOrganism){
+			((AttackingOrganism) o).damage(attack, o);
+		}else{
+			o.damage(attack);
+		}
+		
 	}
 
 }
