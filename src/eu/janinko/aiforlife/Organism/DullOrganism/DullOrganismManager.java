@@ -5,6 +5,7 @@ import java.util.Random;
 import eu.janinko.aiforlife.Organism.Organism;
 import eu.janinko.aiforlife.Organism.OrganismManager;
 import eu.janinko.aiforlife.World.World;
+import eu.janinko.aiforlife.brain.DullGeneticInformation;
 
 public class DullOrganismManager implements OrganismManager {
 
@@ -20,7 +21,7 @@ public class DullOrganismManager implements OrganismManager {
 		return o;
 	}
 	
-	public Organism buildOrganism(World w, GeneticInformation geneticCode) {
+	public Organism buildOrganism(World w, DullGeneticInformation geneticCode) {
 		DullOrganism o = new DullOrganism(w, generator.nextInt(startLiveMax - startLiveMin) + startLiveMin, geneticCode);
 
 		return o;

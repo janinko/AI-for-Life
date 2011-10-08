@@ -3,16 +3,16 @@ package eu.janinko.aiforlife.Organism.PredatorAndPray;
 import java.security.InvalidParameterException;
 
 import eu.janinko.aiforlife.Organism.Organism;
-import eu.janinko.aiforlife.Organism.DullOrganism.GeneticInformation;
 import eu.janinko.aiforlife.World.MovableWorld;
 import eu.janinko.aiforlife.World.SensableWorld;
 import eu.janinko.aiforlife.World.World;
 import eu.janinko.aiforlife.World.WorldObject;
 import eu.janinko.aiforlife.World.SensableWorld.UnsupportedSenseException;
+import eu.janinko.aiforlife.brain.DullGeneticInformation;
 
 public class StrictPredator extends Predator {
 
-	public StrictPredator(World world, GeneticInformation geneticCode) {
+	public StrictPredator(World world, DullGeneticInformation geneticCode) {
 		super(world, geneticCode);
 		if(!(world instanceof SensableWorld))
 			throw new InvalidParameterException("World must be SensableWorld");

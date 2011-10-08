@@ -3,11 +3,11 @@ package eu.janinko.aiforlife.BreedManager;
 import java.util.Random;
 
 import eu.janinko.aiforlife.Organism.Organism;
-import eu.janinko.aiforlife.Organism.DullOrganism.GeneticInformation;
 import eu.janinko.aiforlife.Organism.PredatorAndPray.Pray;
 import eu.janinko.aiforlife.Organism.PredatorAndPray.Predator;
 import eu.janinko.aiforlife.Organism.PredatorAndPray.PredatorAndPrayOrganismManager;
 import eu.janinko.aiforlife.World.World;
+import eu.janinko.aiforlife.brain.DullGeneticInformation;
 
 public class PredatorAndPrayBreedManager implements BreedManager {
 	Random generator = new Random();
@@ -28,7 +28,7 @@ public class PredatorAndPrayBreedManager implements BreedManager {
 		PredatorAndPrayOrganismManager om = (PredatorAndPrayOrganismManager) world.getOrganismManager();
 		
 		if(parents.length == 1){
-			Predator p = om.buildPredator(world, new GeneticInformation(((Predator) parents[0]).getDNA()));
+			Predator p = om.buildPredator(world, new DullGeneticInformation(((Predator) parents[0]).getDNA()));
 			mutate(p);
 			return p;
 		}
@@ -36,8 +36,8 @@ public class PredatorAndPrayBreedManager implements BreedManager {
 		Pray o1 = (Pray) parents[0];
 		Pray o2 = (Pray) parents[1];
 
-		GeneticInformation gc1 = o1.getDNA();
-		GeneticInformation gc2 = o2.getDNA();
+		DullGeneticInformation gc1 = o1.getDNA();
+		DullGeneticInformation gc2 = o2.getDNA();
 		int min = gc1.getLength();
 		int max = gc2.getLength();
 		if(max < min){
@@ -47,7 +47,7 @@ public class PredatorAndPrayBreedManager implements BreedManager {
 		}
 
 		int genlen = gc1.getGenLen();
-		GeneticInformation gc = new GeneticInformation(genlen,0);
+		DullGeneticInformation gc = new DullGeneticInformation(genlen,0);
 		
 		int len;
 		if(max == min){
@@ -95,7 +95,7 @@ public class PredatorAndPrayBreedManager implements BreedManager {
 
 	@Override
 	public Organism mutate(Organism o) throws UnsupportedOrganismException {
-		GeneticInformation gc;
+		DullGeneticInformation gc;
 		if(o instanceof Pray){
 			gc = ((Pray)o).getDNA();
 		}else if(o instanceof Predator){

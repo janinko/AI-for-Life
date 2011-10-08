@@ -12,6 +12,7 @@ import eu.janinko.aiforlife.World.WorldObject;
 import eu.janinko.aiforlife.World.MovableWorld.MoveStyle;
 import eu.janinko.aiforlife.World.SensableWorld.SenseStyle;
 import eu.janinko.aiforlife.World.SensableWorld.UnsupportedSenseException;
+import eu.janinko.aiforlife.brain.DullGeneticInformation;
 
 public class DullOrganism implements Organism {
 	World world;
@@ -21,7 +22,7 @@ public class DullOrganism implements Organism {
 	
 	int nextHits;
 	
-	GeneticInformation dna;
+	DullGeneticInformation dna;
 	int statepointer;
 	
 	int name;
@@ -34,10 +35,10 @@ public class DullOrganism implements Organism {
 
 	DullOrganism(World world, int hits) {
 		this(world, hits, null);
-		dna = new GeneticInformation(3);
+		dna = new DullGeneticInformation(3);
 	}
 
-	DullOrganism(World world, int hits, GeneticInformation dna) {
+	DullOrganism(World world, int hits, DullGeneticInformation dna) {
 		this.world = world;
 		this.hits = hits;
 		this.dna = dna;
@@ -132,11 +133,11 @@ public class DullOrganism implements Organism {
 		}
 	}
 
-	public GeneticInformation getGeneticCode() {
+	public DullGeneticInformation getGeneticCode() {
 		return dna;
 	}
 
-	public void setGeneticCode(GeneticInformation geneticCode) throws InvalidGeneticCodeException {
+	public void setGeneticCode(DullGeneticInformation geneticCode) throws InvalidGeneticCodeException {
 		this.dna = geneticCode;
 	}
 	
