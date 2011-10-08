@@ -30,4 +30,6 @@ public interface Organism {
 	
 	int color(int color);
 
+	void gainScore(int i);
+
 }

@@ -215,4 +215,8 @@ public class Pray implements Organism {
 	public String toString() {
 		return "Pray [age=" + age + ", hashCode()=" + hashCode() + "]";
 	}
+
+	@Override
+	public void gainScore(int i) {
+	}
 }

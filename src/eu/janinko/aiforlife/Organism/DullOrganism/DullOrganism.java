@@ -197,6 +197,10 @@ public class DullOrganism implements Organism {
 		return 0;
 	}
 
+	@Override
+	public void gainScore(int i) {		
+	}
+
 
 	
 }

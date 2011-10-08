@@ -221,4 +221,9 @@ public class Predator implements Organism {
 	public String toString() {
 		return "Predator [score=" + score + ", hashCode()=" + hashCode() + "]";
 	}
+
+	@Override
+	public void gainScore(int i) {
+		this.score += i;
+	}
 }
