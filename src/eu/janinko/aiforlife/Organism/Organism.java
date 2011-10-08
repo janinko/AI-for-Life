@@ -29,5 +29,7 @@ public interface Organism {
 	void onDamage(int damage);
 	
 	int color(int color);
+	
+	double getScore();
 
 }

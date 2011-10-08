@@ -15,12 +15,12 @@ import eu.janinko.aiforlife.World.SensableWorld.SenseStyle;
 import eu.janinko.aiforlife.World.SensableWorld.UnsupportedSenseException;
 
 public class Predator implements Organism {
-	protected int score;
+	protected int score = 0;
 	protected int nextScore;
-	private boolean alive;
+	private boolean alive = true;;
 	
 	protected GeneticInformation dna;
-	protected int statepointer;
+	protected int statepointer = 0;
 	
 	protected World world;
 	
@@ -28,7 +28,7 @@ public class Predator implements Organism {
 	private int g;
 	private int b;
 	
-	private static final int dieThreeshold = -100;
+	private static final int dieThreeshold = -80;
 	private static final int duplicateThreeshold = 200;
 	private static final int damage = 10;
 	private static final int scoreGain = 20;
@@ -44,9 +44,6 @@ public class Predator implements Organism {
 		if(!(world instanceof MovableWorld))
 			throw new InvalidParameterException("The world mus be MovableWorld");
 		
-		score = 0;
-		alive = true;
-		statepointer = 0;
 		this.world = world;
 
 		dna = geneticCode;
@@ -54,6 +51,10 @@ public class Predator implements Organism {
 		r = generator.nextInt(30)+226;
 		g = generator.nextInt(60);
 		b = generator.nextInt(40);
+	}
+
+	public Predator(Predator o) {
+		this(o.world,new GeneticInformation(o.getDNA()));
 	}
 
 	@Override
@@ -220,5 +221,10 @@ public class Predator implements Organism {
 	@Override
 	public String toString() {
 		return "Predator [score=" + score + ", hashCode()=" + hashCode() + "]";
+	}
+
+	@Override
+	public double getScore() {
+		return score;
 	}
 }

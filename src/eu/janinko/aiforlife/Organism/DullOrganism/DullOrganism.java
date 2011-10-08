@@ -196,6 +196,11 @@ public class DullOrganism implements Organism {
 		return 0;
 	}
 
+	@Override
+	public double getScore() {
+		return hits;
+	}
+
 
 	
 }

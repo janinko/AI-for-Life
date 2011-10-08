@@ -35,7 +35,7 @@ public class TestMain {
 	}
 	
 	private static World predatorAndPrayTest(){
-		FlatWorld world = new DrawableFlatWorld(30,30);
+		FlatWorld world = new DrawableFlatWorld(60,40);
 		PredatorAndPrayOrganismManager organismManager = new PredatorAndPrayOrganismManager();
 		PredatorAndPrayBreedManager breedManager = new PredatorAndPrayBreedManager(world);
 		world.setOrganismManager(organismManager);
@@ -45,7 +45,7 @@ public class TestMain {
 		organismManager.setUseStrictPray(true);
 		organismManager.setUseStrictPredator(true);
 		
-		world.generate(20);
+		world.generate(120);
 		
 		return world;
 	}

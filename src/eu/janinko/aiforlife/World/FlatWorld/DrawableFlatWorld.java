@@ -30,8 +30,8 @@ public class DrawableFlatWorld extends FlatWorld implements DrawableWorld {
 	}
 	
 	private void paintGrid(Graphics2D g) {
-		int sizex = this.getSizeX();
-		int sizey = this.getSizeY();
+		int sizex = this.getSizeY();
+		int sizey = this.getSizeX();
 		
 		g.setColor(Color.GRAY);
 		g.setStroke(new BasicStroke(1));

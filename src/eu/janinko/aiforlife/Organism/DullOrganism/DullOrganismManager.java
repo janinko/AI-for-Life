@@ -1,6 +1,7 @@
 package eu.janinko.aiforlife.Organism.DullOrganism;
 
 import java.util.Random;
+import java.util.Set;
 
 import eu.janinko.aiforlife.Organism.Organism;
 import eu.janinko.aiforlife.Organism.OrganismManager;
@@ -44,6 +45,10 @@ public class DullOrganismManager implements OrganismManager {
 	
 	public int getStartLiveMax() {
 		return startLiveMax-1;
+	}
+
+	@Override
+	public void saveBestOrganism(Set<Organism> organisms) {
 	}
 
 

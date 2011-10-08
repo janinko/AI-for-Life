@@ -24,6 +24,10 @@ public class StrictPray extends Pray {
 			throw new InvalidParameterException("World must be SensableWorld");
 	}
 	
+	public StrictPray(StrictPray o) {
+		super(o);
+	}
+
 	@Override
 	public void prepareNextState(){
 		if(statepointer + 1 >= this.dna.getLength()){

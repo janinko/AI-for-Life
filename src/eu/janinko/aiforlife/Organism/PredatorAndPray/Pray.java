@@ -15,12 +15,13 @@ import eu.janinko.aiforlife.World.SensableWorld.SenseStyle;
 import eu.janinko.aiforlife.World.SensableWorld.UnsupportedSenseException;
 
 public class Pray implements Organism {
-	private boolean alive;
-	private boolean willDie;
-	private int age;
+	private boolean alive = true;
+	private boolean willDie = false;
+	private int age = 0;
+	private int score = 0;
 	
 	protected GeneticInformation dna;
-	protected int statepointer;
+	protected int statepointer = 0;
 	
 	protected World world;
 	
@@ -40,18 +41,18 @@ public class Pray implements Organism {
 	public Pray(World world, GeneticInformation geneticCode) {
 		if(!(world instanceof MovableWorld))
 			throw new InvalidParameterException("The world mus be MovableWorld");
-		
-		alive = true;
-		willDie = false;
-		statepointer = 0;
+
 		this.world = world;
 
 		dna = geneticCode;
-		age = 0;
 		
 		r = generator.nextInt(80);
 		g = generator.nextInt(30)+226;
 		b = generator.nextInt(80);
+	}
+
+	public Pray(Pray o) {
+		this(o.world,new GeneticInformation(o.getDNA()));
 	}
 
 	@Override
@@ -92,6 +93,7 @@ public class Pray implements Organism {
 					wb[0] = this;
 					wb[1] = pray;
 					this.world.breed(wb);
+					this.score++;
 				}
 			}
 		}
@@ -214,5 +216,10 @@ public class Pray implements Organism {
 	@Override
 	public String toString() {
 		return "Pray [age=" + age + ", hashCode()=" + hashCode() + "]";
+	}
+
+	@Override
+	public double getScore() {
+		return score;
 	}
 }

@@ -24,6 +24,10 @@ public class StrictPredator extends Predator {
 			throw new InvalidParameterException("World must be SensableWorld");
 	}
 	
+	public StrictPredator(StrictPredator o) {
+		super(o);
+	}
+
 	@Override
 	public void prepareNextState(){
 		if(statepointer + 1 >= this.dna.getLength()){

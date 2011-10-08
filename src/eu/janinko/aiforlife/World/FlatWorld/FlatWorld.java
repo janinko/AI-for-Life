@@ -58,6 +58,7 @@ public class FlatWorld implements World, WorldStatistics, MovableWorld, Sensable
 		this.generate(10);
 	}
 	
+	private int generated = 10;
 	public void generate(int count){
 		if(count > sizeX * sizeY){
 			count = sizeX * sizeY;
@@ -70,6 +71,7 @@ public class FlatWorld implements World, WorldStatistics, MovableWorld, Sensable
 			}
 			organisms.add(newOrganism, pos);
 		}
+		generated = count;
 	}
 
 	@Override
@@ -96,6 +98,7 @@ public class FlatWorld implements World, WorldStatistics, MovableWorld, Sensable
 		this.organismManager = om;
 	}
 
+	private int tickcounter = 0;
 	@Override
 	public void nextTick() {
 		damaged = 0;
@@ -103,8 +106,17 @@ public class FlatWorld implements World, WorldStatistics, MovableWorld, Sensable
 		colision = 0;
 		born = 0;
 		
+		Set<Organism> organs = organisms.getOrganisms();
+		
+		if(tickcounter % 5 == 0){
+			this.organismManager.saveBestOrganism(organs);
+		}
+		if(organs.size() == 0){
+			this.generate(generated);
+		}
+		
 		this.organismsInNextState = new OrganismsInWorld(organisms);
-		for(Organism o : organisms.getOrganisms()){
+		for(Organism o : organs){
 			o.prepareNextState();
 			try {
 				this.breedManager.maybeMutate(o);
@@ -138,6 +150,7 @@ public class FlatWorld implements World, WorldStatistics, MovableWorld, Sensable
 		
 		newborns.clear();
 		propertiesGenerated = false;
+		tickcounter++;
 	}
 
 	private void handleColisions() {
