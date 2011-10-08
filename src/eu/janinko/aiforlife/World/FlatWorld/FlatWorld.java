@@ -15,7 +15,7 @@ import eu.janinko.aiforlife.Organism.PredatorAndPray.Predator;
 import eu.janinko.aiforlife.World.WorldStatistics;
 import eu.janinko.aiforlife.brain.DullGeneticInformation;
 
-public class FlatWorld extends AbstractFlatWorld implements WorldStatistics {
+public class FlatWorld extends DrawableFlatWorld implements WorldStatistics {
 
 	OrganismsInWorld organismsInNextState;
 	
@@ -180,7 +180,9 @@ public class FlatWorld extends AbstractFlatWorld implements WorldStatistics {
 		int count = 0;
 		
 		for(Organism o : organisms.getOrganisms()){
-			double breedery = getGeneticInformation(o).getBreedery();
+			DullGeneticInformation gi = getGeneticInformation(o);
+			if(gi == null) break;
+			double breedery = gi.getBreedery();
 			if(breedery < propertyMinBread){
 				propertyMinBread = breedery;
 			}

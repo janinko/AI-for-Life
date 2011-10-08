@@ -4,7 +4,7 @@ import java.util.Set;
 
 import eu.janinko.aiforlife.Organism.Organism;
 
-public class NoninteractFlatWorld extends AbstractFlatWorld {
+public class NoninteractFlatWorld extends DrawableFlatWorld {
 
 	public NoninteractFlatWorld(int sizeX, int sizeY) {
 		super(sizeX, sizeY);
@@ -28,11 +28,8 @@ public class NoninteractFlatWorld extends AbstractFlatWorld {
 
 	@Override
 	public void nextTick() {
-		for(Organism o : organisms.getOrganisms()){
+		for(Organism o : organisms.getCopyOfOrganisms()){
 			o.prepareNextState();
-		}
-		for(Organism o : organisms.getOrganisms()){
-			o.gotoNextState();
 		}
 	}
 
