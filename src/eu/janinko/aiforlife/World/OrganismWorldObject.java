@@ -5,16 +5,16 @@ import eu.janinko.aiforlife.Organism.Organism;
 import eu.janinko.aiforlife.Organism.GPOrganism.GPOrganism;
 
 public class OrganismWorldObject implements WorldObject {
-	Organism o;
+	Organism organism;
 	
 	public OrganismWorldObject(Organism o){
-		this.o = o;
+		this.organism = o;
 	}
 	
 
 	@Override
 	public Organism getOrganism() {
-		return this.o;
+		return this.organism;
 	}
 
 	@Override
@@ -25,10 +25,10 @@ public class OrganismWorldObject implements WorldObject {
 
 	@Override
 	public void attacked(Organism o, int attack) {
-		if(o instanceof AttackingOrganism){
-			((AttackingOrganism) o).damage(attack, o);
+		if(organism instanceof AttackingOrganism){
+			((AttackingOrganism) organism).damage(attack, o);
 		}else{
-			o.damage(attack);
+			organism.damage(attack);
 		}
 		
 	}
