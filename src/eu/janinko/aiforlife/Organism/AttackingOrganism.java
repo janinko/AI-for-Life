@@ -5,4 +5,6 @@ import eu.janinko.aiforlife.World.WorldObject;
 public interface AttackingOrganism extends Organism {
 
 	void attack(WorldObject wo);
+
+	void damage(int damage, Organism o);
 }
